@@ -1,0 +1,10 @@
+{
+  "function": {
+    "amplifytemplate7a0ec88a": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": []
+    }
+  }
+}

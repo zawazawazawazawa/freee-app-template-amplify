@@ -1,6 +1,85 @@
 import React from 'react';
 
+let token;
+
+const request = require("request");
+const token_url = "https://accounts.secure.freee.co.jp/public_api/token";
+const authorizaton_url = "https://accounts.secure.freee.co.jp/public_api/authorize";
+const redirect_uri = "";
+const client_id = "";
+const client_secret = "";
+// const code = "取得した認可コード";
+// const access_token = null;
+// const refresh_token = null;
+
+// 認可コードを取得する
+function getAuthorizationCode() {
+  window.location.replace(authorizaton_url + "?client_id=" +  client_id + "&redirect_uri=" + redirect_uri + "&response_type=code");
+}
+
+function handleLogin() {
+  if (token === undefined) {
+    getAuthorizationCode();
+  }
+}
+
+// // アクセストークンを取得する。
+// const options = {
+//   method: 'POST',
+//   url: token_url,
+//   headers: {
+//     'cache-control': 'no-cache',
+//     'Content-Type': 'application/json'
+//   },
+//   form: {
+//     grant_type: "authorization_code",
+//     redirect_uri: redirect_uri,
+//     client_id: client_id,
+//     client_secret: client_secret,
+//     code: code
+//   },
+//   json: true
+// };
+
+// request(options, function (error, response, body) {
+//   if (error) throw new Error(error);
+//   console.log(body);
+//   //リクエストレスポンスからアクセストークンを取得する。
+//   const response = body;
+//   access_token = response.access_token;
+//   refresh_token = response.refresh_token;
+// });
+
+// //リフレッシュトークンを用いてアクセストークンを取得する。
+// const options = {
+//   method: 'POST',
+//   url: token_url,
+//   headers: {
+//     'cache-control': 'no-cache',
+//     'Content-Type': 'application/x-www-form-urlencoded'
+//   },
+//   form: {
+//     grant_type: "refresh_token",
+//     redirect_uri: redirect_uri,
+//     client_id: client_id,
+//     client_secret: client_secret,
+//     refresh_token: refresh_token
+//   },
+//   json: true
+// };
+
+// request(options, function (error, response, body) {
+//   if (error) throw new Error(error);
+//   //リクエストレスポンスからアクセストークンを取得する。
+//   const response = body;
+//   access_token = response.access_token;
+//   refresh_token = response.refresh_token;
+// });
+
+
 function App() {
+  getAuthorizationCode();
+  
   return (
     <div className="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-header">
       <header

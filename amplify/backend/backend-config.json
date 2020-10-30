@@ -21,21 +21,12 @@
           ]
         }
       ]
-    },
-    "callbackApi": {
-      "service": "API Gateway",
-      "providerPlugin": "awscloudformation",
-      "dependsOn": [
-        {
-          "category": "function",
-          "resourceName": "amplifytemplate09a647a4",
-          "attributes": [
-            "Name",
-            "Arn"
-          ]
-        }
-      ]
     }
   },
-  "storage": {}
+  "storage": {
+    "amplifyTemplateDynamoDB": {
+      "service": "DynamoDB",
+      "providerPlugin": "awscloudformation"
+    }
+  }
 }

@@ -1,0 +1,5 @@
+{
+    "tableName": "amplifyTemplateDynamoDB",
+    "partitionKeyName": "freeeAccessToken",
+    "partitionKeyType": "S"
+}

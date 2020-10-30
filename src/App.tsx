@@ -1,78 +1,38 @@
 import React from 'react';
-import Amplify, { API } from 'aws-amplify';
+import Amplify from 'aws-amplify';
 import awsconfig from './aws-exports';
 
 Amplify.configure(awsconfig);
-
-let token;
 
 // 認可コードを取得する
 function getAuthorizationCode() {
   window.location.replace('https://noil4p56w5.execute-api.ap-northeast-1.amazonaws.com/dev/authorization');
 }
 
-function handleLogin() {
-  if (token === undefined) {
-    getAuthorizationCode();
-  }
-}
-
-// // アクセストークンを取得する。
-// const options = {
-//   method: 'POST',
-//   url: token_url,
-//   headers: {
-//     'cache-control': 'no-cache',
-//     'Content-Type': 'application/json'
-//   },
-//   form: {
-//     grant_type: "authorization_code",
-//     redirect_uri: redirect_uri,
-//     client_id: client_id,
-//     client_secret: client_secret,
-//     code: code
-//   },
-//   json: true
-// };
-
-// request(options, function (error, response, body) {
-//   if (error) throw new Error(error);
-//   console.log(body);
-//   //リクエストレスポンスからアクセストークンを取得する。
-//   const response = body;
-//   access_token = response.access_token;
-//   refresh_token = response.refresh_token;
-// });
-
-// //リフレッシュトークンを用いてアクセストークンを取得する。
-// const options = {
-//   method: 'POST',
-//   url: token_url,
-//   headers: {
-//     'cache-control': 'no-cache',
-//     'Content-Type': 'application/x-www-form-urlencoded'
-//   },
-//   form: {
-//     grant_type: "refresh_token",
-//     redirect_uri: redirect_uri,
-//     client_id: client_id,
-//     client_secret: client_secret,
-//     refresh_token: refresh_token
-//   },
-//   json: true
-// };
-
-// request(options, function (error, response, body) {
-//   if (error) throw new Error(error);
-//   //リクエストレスポンスからアクセストークンを取得する。
-//   const response = body;
-//   access_token = response.access_token;
-//   refresh_token = response.refresh_token;
-// });
+let id;
+let email;
+let displayName;
 
 
 function App() {
-  getAuthorizationCode();
+  function handleLogin() {
+    const search = window.location.search.substring(1);
+    if (search === '') {
+      getAuthorizationCode();
+    } else {
+      const params = JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}')
+      id = params['id']
+      email = params['email']
+      displayName = params['displayName']
+      // window.history.replaceState({}, '', '/')
+    }
+  }
+
+  // const [id, setId] = React.useState('')
+  // const [email, setEmail] = React.useState('')
+  // const [displayName, setDisplayName] = React.useState('')
+
+  handleLogin();
   
   return (
     <div className="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-header">
@@ -83,24 +43,18 @@ function App() {
           <div
             className="mdl-layout__header-row mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--8-col-desktop"
           >
-            <h3>freee sample app on firebase</h3>
+            <h3>freee sample app on Amplify</h3>
           </div>
         </div>
       </header>
-      <div id="loading-container" className="loading">
-        <div
-          className="mdl-spinner mdl-js-spinner is-active"
-          style={{width: "80px", height: "80px"}}
-        ></div>
-        <div>ユーザー情報読み込み中</div>
-      </div>
       <main id="main-container" className="mdl-layout__content mdl-color--grey-100">
         <div id="demo-signed-in-card" className="mdl-grid">
           <div className="mdl-card mdl-shadow--2dp mdl-cell--12-col">
             <div className="mdl-card__supporting-text mdl-color-text--grey-600">
               <p>
-                ようこそ <span id="demo-name-container"></span>さん<br />
-                Freee User ID: <span id="demo-uid-container"></span><br />
+                ようこそ <span id="demo-name-container">{displayName}</span>さん<br />
+                Freee User ID: <span id="demo-uid-container">{id}</span><br />
+                Email: <span id="demo-email-container">{email}</span><br />
               </p>
               <div>
                 <div

@@ -6,14 +6,10 @@ or in the "license" file accompanying this file. This file is distributed on an 
 See the License for the specific language governing permissions and limitations under the License.
 */
 
-
-
-
-var express = require('express')
-var bodyParser = require('body-parser')
-var awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
-var oauth2 = require('simple-oauth2')
-var cors = require('cors')
+const express = require('express')
+const bodyParser = require('body-parser')
+const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
+const axios = require('axios')
 
 const config = {
   client: {
@@ -32,25 +28,18 @@ const config = {
 const { AuthorizationCode } = require('simple-oauth2');
 
 // declare a new express app
-var app = express()
+const app = express()
 app.use(bodyParser.json())
 app.use(awsServerlessExpressMiddleware.eventContext())
 
 // Enable CORS for all methods
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*")
-  res.header('Access-Control-Allow-Methods', 'GET,POST,DELETE')
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
   next()
 });
 
-app.use(cors());
-
-
-/**********************
- * Example get method *
- **********************/
-
+// redirect to authorization page
 app.get('/authorization', function(req, res) {
   const client = new AuthorizationCode(config);
 
@@ -62,6 +51,70 @@ app.get('/authorization', function(req, res) {
   
   res.redirect(redirectUri);
 });
+
+// callback and get access token
+app.get('/callback', function(req, res) {
+  const code = req.query.code
+  callback(code, res);
+});
+
+function getFreeeUser(accessToken) {
+  return axios.get('https://api.freee.co.jp/api/1/users/me?companies=true', {
+    headers: { Authorization: `Bearer ${accessToken}` }
+  })
+}
+
+/**
+ * Get token, save it to firebase and login firebase
+ */
+
+async function callback(code, res) {
+  const client = new AuthorizationCode(config);
+
+  try {
+    const result = await client.getToken({
+      client_id: config.client.id,
+      client_secret: config.client.secret,
+      code: code,
+      redirect_uri: process.env.REDIRECT_URI
+    })
+    
+    const freeeToken = {
+      accessToken: result.token.access_token,
+      refreshToken: result.token.refresh_token,
+      expiresIn: result.token.expires_in,
+      createdAt: result.token.created_at
+    }
+
+    // get freee user
+    const response = await getFreeeUser(freeeToken.accessToken)
+
+    // res.send(user)
+    
+    const id = response.data.user.id
+    const email = response.data.user.email
+    
+    // consider null value of displayName
+    const displayName = response.data.user.display_name
+      ? response.data.user.display_name
+      : ''
+
+    // // Create a Firebase Account and get the custom Auth Token.
+    // const firebaseToken = await this.createFirebaseAccount(
+    //   id,
+    //   email,
+    //   displayName,
+    //   freeeToken
+    // )
+
+    // redirect to home path with token info
+    res.redirect(`http://localhost:3000?id=${id}&email=${email}&displayName=${displayName}`)
+  } catch (error) {
+    console.error('Some error occured on login process:', error)
+    res.send(401)
+    // res.send(this.signInRefusedTemplate())
+  }
+}
 
 app.listen(3000, function() {
     console.log("App started")

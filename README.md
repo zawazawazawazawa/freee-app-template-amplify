@@ -3,6 +3,7 @@
 - rootへリクエスト
 - 認可画面へリダイレクト
   - この時client_idとredirect_uriを持っている必要があるはず
+  - ブラウザにはcredential渡せないからlambdaか
 - 認可
   - アプリ側に登録してあるcall back URLにリクエスト
 - teplate appのホームへ帰ってくる
@@ -23,4 +24,10 @@
 
 # こまりごと
 - redirect uriどこに設定したらいいんだろう
+  - lambdaにした
+- lambdaからのredirectどうしよう
 - client_id, secret, redirect_uriの設定どうやるか
+
+# Lambda
+- ログインしてない時にcredentialもって認可画面へリダイレクトするやつ
+- コード付きでcallbackしてきたときに認可コードからアクセストークン取得してdbに保存するやつ

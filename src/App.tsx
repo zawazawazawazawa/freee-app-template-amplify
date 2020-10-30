@@ -1,20 +1,14 @@
 import React from 'react';
+import Amplify, { API } from 'aws-amplify';
+import awsconfig from './aws-exports';
+
+Amplify.configure(awsconfig);
 
 let token;
 
-const request = require("request");
-const token_url = "https://accounts.secure.freee.co.jp/public_api/token";
-const authorizaton_url = "https://accounts.secure.freee.co.jp/public_api/authorize";
-const redirect_uri = "";
-const client_id = "";
-const client_secret = "";
-// const code = "取得した認可コード";
-// const access_token = null;
-// const refresh_token = null;
-
 // 認可コードを取得する
 function getAuthorizationCode() {
-  window.location.replace(authorizaton_url + "?client_id=" +  client_id + "&redirect_uri=" + redirect_uri + "&response_type=code");
+  window.location.replace('https://noil4p56w5.execute-api.ap-northeast-1.amazonaws.com/dev/authorization');
 }
 
 function handleLogin() {

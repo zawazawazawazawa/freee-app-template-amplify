@@ -1,0 +1,35 @@
+{
+    "paths": [
+        {
+            "name": "/callback",
+            "lambdaFunction": "amplifytemplate09a647a4",
+            "privacy": {
+                "open": true
+            },
+            "policyResourceName": "/callback"
+        }
+    ],
+    "resourceName": "callbackApi",
+    "apiName": "callbackApi",
+    "functionArns": [
+        {
+            "lambdaFunction": "amplifytemplate09a647a4"
+        }
+    ],
+    "privacy": {
+        "auth": 0,
+        "unauth": 0,
+        "authRoleName": "amplify-amplifytemplate-dev-212127-authRole",
+        "unAuthRoleName": "amplify-amplifytemplate-dev-212127-unauthRole"
+    },
+    "dependsOn": [
+        {
+            "category": "function",
+            "resourceName": "amplifytemplate09a647a4",
+            "attributes": [
+                "Name",
+                "Arn"
+            ]
+        }
+    ]
+}

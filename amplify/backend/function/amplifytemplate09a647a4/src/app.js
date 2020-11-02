@@ -10,6 +10,10 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
 const axios = require('axios')
+const AWS = require("aws-sdk");
+
+// const docClient = new AWS.DynamoDB.DocumentClient();
+// const table = amplifyTemplateDynamoDB-dev
 
 const config = {
   client: {
@@ -99,13 +103,17 @@ async function callback(code, res) {
       ? response.data.user.display_name
       : ''
 
-    // // Create a Firebase Account and get the custom Auth Token.
-    // const firebaseToken = await this.createFirebaseAccount(
-    //   id,
-    //   email,
-    //   displayName,
-    //   freeeToken
-    // )
+    // const params = {
+    //   TableName:table,
+    //   Item:{
+    //       "user_id": ,
+    //       "": title,
+    //       "info":{
+    //           "plot": "Nothing happens at all.",
+    //           "rating": 0
+    //       }
+    //   }
+    // }
 
     // redirect to home path with token info
     res.redirect(`http://localhost:3000?id=${id}&email=${email}&displayName=${displayName}`)
